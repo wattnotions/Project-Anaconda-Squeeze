@@ -8,7 +8,7 @@
 
 
 let x, y;
-
+let dx=1;
 
 
 
@@ -19,9 +19,15 @@ function setup() {
   canvas2.clear()
   
   // Starts in the middle
-  x = width / 2;
+  x=0;
   y = height/2;
   background(200);
+  
+  fr = 24;
+  frameRate(fr);
+  
+  pix_per_frame = windowWidth/60;
+  dx = pix_per_frame/fr;
   
 }
 
@@ -55,7 +61,9 @@ function draw() {
   
   
   // Moving up at a constant speed
-  x = x+1;
+  x = x+dx;
+  
+  
   
   // Reset to the bottom
   if (x > width) {
@@ -76,6 +84,7 @@ function windowResized() {
    
    background(200);
    y = height/2;
+   setup();
 }
 
 function mousePressed() {
