@@ -14,6 +14,7 @@ let x, y;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+ 
   canvas2 = createGraphics(windowWidth, windowHeight);
   canvas2.clear()
   
@@ -38,6 +39,7 @@ function draw() {
     y += 5;
   }
  
+  //This section prints the overlay stuff to screen (refresh)
   fill(255,150)
   noStroke()
   textSize(32);
@@ -46,6 +48,7 @@ function draw() {
  
   
  
+  //This part draws the line that has persistence between frames
   canvas2.stroke(5);
   canvas2.fill(100);
   canvas2. ellipse(x, y, 2, 2);
@@ -58,6 +61,7 @@ function draw() {
   if (x > width) {
     x=0;
 	background(200);
+	
   }
   
   image(canvas2, 0, 0);
@@ -68,7 +72,8 @@ function draw() {
 
 
 function windowResized() {
-   resizeCanvas(displayWidth, windowHeight);
+   resizeCanvas(windowWidth, windowHeight);
+   
    background(200);
    y = height/2;
 }
