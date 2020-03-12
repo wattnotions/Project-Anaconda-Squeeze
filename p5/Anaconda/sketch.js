@@ -15,6 +15,11 @@ x_margin = 80;
 let serial;
 let latestData = "waiting for data";  // you'll use this to write incoming data to the canvas
 
+
+prev_val = 0;
+
+arduino_port = "COM7";
+
 function setup() {
   createCanvas(windowWidth, windowHeight);
  
@@ -49,7 +54,7 @@ function setup() {
   serial = new p5.SerialPort();
 
   serial.list();
-  serial.open("COM5");
+  serial.open(arduino_port);
   serial.on('connected', serverConnected);
   serial.on('list', gotList);
   serial.on('data', gotData);
@@ -70,7 +75,7 @@ function draw() {
 
 
 	
-
+	
 
 	if (keyIsDown(UP_ARROW)) {
 		y -= 5;
@@ -79,11 +84,11 @@ function draw() {
 		y += 5;
 	}
 	
-	old_y = y;
+	//old_y = y;
 	y = int(latestData);
 	
-	print("y = " +y);
-	print("old_y = "+old_y);
+	//print("y = " +y);
+	//print("old_y = "+old_y);
 	
 	
 	//y = lerp(old_y, new_y, 0.1)
@@ -141,9 +146,11 @@ function draw() {
 	}
 	
 	
-//	sm_x = lerp(old_x, x, 0.01);
+	//old_x = lerp(old_x, x, 0.001);
+	prev_val = lerp(prev_val, latestData, 0.1);
+	console.log(prev_val);
 	//sm_y = lerp(100, y, 0.01);
-//	canvas2.line(old_x, old_y,sm_x,sm_y);
+	canvas2.ellipse(x,prev_val, 2);
 	image(canvas2, 0, 0);
 
 
@@ -215,8 +222,11 @@ function gotData() {
   let currentString = serial.readLine();  // read the incoming string
   trim(currentString);                    // remove any trailing whitespace
   if (!currentString) return;             // if the string is empty, do no more
-  console.log(currentString);             // print the string
-  latestData = currentString;            // save it for the draw method
+  //console.log(currentString);             // print the string
+  prev_val = latestData;
+  //print("prev val = " + prev_val);
+  latestData = int(currentString);            // save it for the draw method
+  //print("new val = " + latestData);
 }
 
 // We got raw from the serial port
