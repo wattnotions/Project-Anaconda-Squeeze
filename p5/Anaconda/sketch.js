@@ -17,6 +17,7 @@ let latestData = "waiting for data";  // you'll use this to write incoming data 
 
 
 prev_val = 0;
+prev_val_2 = 0;
 
 arduino_port = "/dev/ttyACM0";
 
@@ -74,13 +75,7 @@ function draw() {
 	
 	
 
-	//This section prints the overlay stuff to screen (refresh)
-	textAlign(LEFT);
-	fill(255,150)
-	noStroke()
-	textSize(32);
-	fill(0, 102, 153);
-	text("Current Pressure Level :" +y, 10, 30);
+	displayPressure()
 
 
 
@@ -88,7 +83,37 @@ function draw() {
 	//This part draws the line that has persistence between frames
 	canvas2.stroke(5);
 	canvas2.fill(100);
-	//canvas2. ellipse(x, y, 2, 2);
+	
+	
+	drawAxes()
+
+
+	// Moving up at a constant speed
+	old_x = x;
+	x = x+dx;
+
+
+
+	// Reset to the bottom
+	
+	
+	
+	//old_x = lerp(old_x, x, 0.001);
+	prev_val = lerp(prev_val, latestData, 0.1);
+	console.log(prev_val);
+	//sm_y = lerp(100, y, 0.01);
+	
+	canvas2.line(old_x, prev_val_2, old_x, prev_val);
+	
+	//if (x < windowWidth-x_margin){
+		//canvas2.ellipse(x,prev_val, 2);
+//	}
+	image(canvas2, 0, 0);
+
+
+}
+
+function drawAxes(){
 	
 	canvas2.line(x_margin,y_margin, x_margin,windowHeight-y_margin); //draw y axis
 	canvas2.line(x_margin,windowHeight-y_margin, windowWidth-x_margin,windowHeight-y_margin); //draw x axis
@@ -110,33 +135,17 @@ function draw() {
 	canvas2.textSize(30); 
 
 	canvas2.pop()
-
-
-	// Moving up at a constant speed
-	old_x = x;
-	x = x+dx;
-
-
-
-	// Reset to the bottom
 	
-	
-	
-	//old_x = lerp(old_x, x, 0.001);
-	prev_val = lerp(prev_val, latestData, 0.1);
-	console.log(prev_val);
-	//sm_y = lerp(100, y, 0.01);
-	
-	if (x < windowWidth-x_margin){
-		canvas2.ellipse(x,prev_val, 2);
-	}
-	image(canvas2, 0, 0);
-
-
 }
 
-function drawAxes(){
-	
+function displayPressure(){
+	//This section prints the overlay stuff to screen (refresh)
+	textAlign(LEFT);
+	fill(255,150)
+	noStroke()
+	textSize(32);
+	fill(0, 102, 153);
+	text("Current Pressure Level :" +int(latestData), 10, 30);
 }
 
 
@@ -206,6 +215,7 @@ function gotData() {
   trim(currentString);                    // remove any trailing whitespace
   if (!currentString) return;             // if the string is empty, do no more
   //console.log(currentString);             // print the string
+  prev_val_2 = prev_val;
   prev_val = latestData;
   //print("prev val = " + prev_val);
   latestData = int(currentString);            // save it for the draw method
