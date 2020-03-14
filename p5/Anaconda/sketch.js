@@ -18,7 +18,7 @@ let latestData = "waiting for data";  // you'll use this to write incoming data 
 
 prev_val = 0;
 
-arduino_port = "COM7";
+arduino_port = "/dev/ttyACM0";
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -37,10 +37,10 @@ function setup() {
   pix_per_frame = windowWidth/60;
   dx = pix_per_frame/fr;
   
-  osc = new p5.TriOsc();
+  //osc = new p5.TriOsc();
   // Start silent
-  osc.start();
-  osc.amp(0);
+  //osc.start();
+  //osc.amp(0);
   
  // playNote(60,500);
   //playNote(70,500);
@@ -69,29 +69,9 @@ function setup() {
 
 function draw() {
 	background('white');
-
-
-
-
-
 	
-	
-
-	if (keyIsDown(UP_ARROW)) {
-		y -= 5;
-	}
-	if (keyIsDown(DOWN_ARROW)) {
-		y += 5;
-	}
-	
-	//old_y = y;
 	y = int(latestData);
 	
-	//print("y = " +y);
-	//print("old_y = "+old_y);
-	
-	
-	//y = lerp(old_y, new_y, 0.1)
 	
 
 	//This section prints the overlay stuff to screen (refresh)
@@ -139,21 +119,24 @@ function draw() {
 
 
 	// Reset to the bottom
-	if (x > width) {
-		x=0;
-		background(200);
-
-	}
+	
 	
 	
 	//old_x = lerp(old_x, x, 0.001);
 	prev_val = lerp(prev_val, latestData, 0.1);
 	console.log(prev_val);
 	//sm_y = lerp(100, y, 0.01);
-	canvas2.ellipse(x,prev_val, 2);
+	
+	if (x < windowWidth-x_margin){
+		canvas2.ellipse(x,prev_val, 2);
+	}
 	image(canvas2, 0, 0);
 
 
+}
+
+function drawAxes(){
+	
 }
 
 
