@@ -14,7 +14,7 @@ function setup() {
 
   // Assuming our Arduino is connected, let's open the connection to it
   // Change this to the name of your arduino's serial port
-  serial.open("COM7");
+  serial.open("/dev/ttyACM0");
 
   // Here are the callbacks that you can register
   // When we connect to the underlying server

@@ -32,7 +32,10 @@ function setup() {
   
   // Starts in the middle
   x=x_margin;
-  y = height/2;
+  y = windowHeight-y_margin;
+  
+  old_x = x;
+  old_y = y;
   background('white');
   
   fr = 15;
@@ -40,6 +43,8 @@ function setup() {
   
   pix_per_frame = windowWidth/60;
   dx = pix_per_frame/fr;
+  
+  latest_val = 0;
   
   //osc = new p5.TriOsc();
   // Start silent
@@ -71,7 +76,7 @@ function setup() {
   
 }
 
-
+new_data = false;
 
 function draw() {
 	background('white');
@@ -80,7 +85,7 @@ function draw() {
 	
 	
 
-	displayPressure(y)
+	displayPressure(latest_val)
 
 
 
@@ -129,7 +134,12 @@ function draw() {
 		
 		
 		old_y = y;
-		y = new_data;
+		//y = -new_data;
+		
+		y = new_data/2; //0-1024, scale to 0-512
+		latest_val = new_data;
+		
+		y = windowHeight - y;
 		//canvas2.ellipse(x,y,6);
 		
 		
@@ -138,13 +148,20 @@ function draw() {
 		print(new_data);
 		
 	}
-	print(int(old_x) + "  " + x + "  " + old_y + "  " + y);
+	//print(int(old_x) + "  " + x + "  " + old_y + "  " + y);
 	old_x2 = old_x;
 	old_y2 = old_y;
 	
 	old_x = lerp(old_x, x, 0.3);
 	old_y = lerp(old_y, y, 0.3);
-	canvas2.line(old_x2, old_y2, old_x, old_y);
+	//push()
+	//canvas2.translate(x_margin, windowHeight-y_margin);
+	
+	if(x < windowWidth-x_margin){
+		canvas2.line(old_x2, old_y2, old_x, old_y);
+	}
+	
+	//pop()
 	//canvas2.ellipse(old_x, old_y,6);
 	
 	//if (x < windowWidth-x_margin){
@@ -152,6 +169,10 @@ function draw() {
 //	}
 	image(canvas2, 0, 0);
 
+
+}
+
+function formatYPoint(){    //formats the y vals to fit in graph area
 
 }
 
