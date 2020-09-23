@@ -6,6 +6,8 @@ http://simpson.edu/computer-science/
 """
  
 import pygame
+import pygame_textinput
+import os
  
 # Define some colors
 BLACK = (0, 0, 0)
@@ -19,7 +21,9 @@ def draw_stick_figure(screen, x, y):
     pygame.draw.ellipse(screen, WHITE, [1 + x, y, 10, 10], 0)
     
     
-  
+# Create TextInput-object
+#textinput = pygame_textinput.TextInput()
+
  
     
  
@@ -61,7 +65,10 @@ y_coord = (HEIGHT - Y_AX_OF) - 5
 
 
 
-SQUEEZE_TIME   =   5000      # game time in milliseconds
+SQUEEZE_TIME   =   2000      # game time in milliseconds
+squeeze_data   = []           # list to hold squeeze data
+
+
 GRAPH_PIXELS   = WIDTH - (X_AX_OF*2)   #Number of pixels on the X axis of the graph section
 PIX_PER_SECOND = SQUEEZE_TIME/GRAPH_PIXELS  # line update in milliseconds
 
@@ -71,10 +78,96 @@ pygame.time.set_timer(MOVEX, int(PIX_PER_SECOND))
 print(PIX_PER_SECOND)
 
 
+display_instructions = True
+instruction_page = 1
 
+username = ''
+font = pygame.font.Font(None, 36) 
+# -------- Instruction Page Loop -----------
+while not done and display_instructions:
+
+
+    # Set the screen background
+    screen.fill(WHITE)
+
+    events = pygame.event.get()
+    for event in events:
+        if event.type == pygame.QUIT:
+            done = True
+        if event.type == pygame.K_UP:
+            instruction_page += 1
+            if instruction_page == 2:
+                display_instructions = False
+                
+        if event.type == pygame.K_SPACE:
+                    f = open(username+".csv", "w")
+                    f.close()
+                    text = font.render("New save file created, press space to start", True, BLACK)
+                    screen.blit(text, [10, 200])
+                
+        
+ 
+    
+ 
+    if instruction_page == 1:
+        # Draw instructions, page 1
+        # This could also load an image created in another program.
+        # That could be both easier and more flexible.
+ 
+        text = font.render("Enter your first name and your age. E.G. shane26:", True, BLACK)
+        screen.blit(text, [10, 10])
+        
+        text = font.render("Press enter when finished", True, BLACK)
+        screen.blit(text, [10, 50])
+ 
+        # Blit its surface onto the screen
+       # screen.blit(textinput.get_surface(), (10, 100))
+        
+        
+    
+ 
+    
+         # Feed it with events every frame
+         
+        
+       # if textinput.update(events):
+       #         username = textinput.get_text()
+            
+        if username:    
+            if (username + ".csv" in os.listdir("user_data")):
+                text = font.render("User data found, welcome back " + username, True, BLACK)
+                screen.blit(text, [10, 150])
+            else:
+                text = font.render("User file not found, press space to make new file", True, BLACK)
+                screen.blit(text, [10, 150])
+                
+                
+                
+                
+          
+            #instruction_page = 2
+        
+ 
+        if instruction_page == 2:
+        # Draw instructions, page 1
+        # This could also load an image created in another program.
+        # That could be both easier and more flexible.
+        
+            pass
+            
+            
+            
+    # Limit to 60 frames per second
+    clock.tick(60)
+ 
+    # Go ahead and update the screen with what we've drawn.
+    pygame.display.flip()
+ 
 
  
 # -------- Main Program Loop -----------
+
+screen.fill(BLACK)
 while not done:
     # --- Event Processing
     
@@ -111,6 +204,8 @@ while not done:
         elif event.type == MOVEX:
             if x_coord < (WIDTH - X_AX_OF):
                 x_coord += 1
+            else:
+                done = True
             
  
     # --- Game Logic
@@ -121,6 +216,7 @@ while not done:
     
     
     y_coord = y_coord + y_speed
+    squeeze_data.append(y_coord)
     
     
     
@@ -144,6 +240,9 @@ while not done:
  
     # Limit frames per second
     clock.tick(60)
+ 
+print(len(squeeze_data))
+print(squeeze_data[1:100])
  
 # Close the window and quit.
 pygame.quit()
