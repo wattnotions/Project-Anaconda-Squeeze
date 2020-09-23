@@ -27,6 +27,13 @@ def draw_stick_figure(screen, x, y):
 pygame.init()
  
 # Set the width and height of the screen [width,height]
+
+WIDTH = 700
+HEIGHT = 500
+
+X_AX_OF = 50
+Y_AX_OF = 50
+
 size = [700, 500]
 screen = pygame.display.set_mode(size)
  
@@ -46,12 +53,26 @@ x_speed = 0
 y_speed = 0
  
 # Current position
-x_coord = 10
-y_coord = 10
+x_coord = X_AX_OF
+y_coord = (HEIGHT - Y_AX_OF) - 5
 
+
+
+
+
+
+SQUEEZE_TIME   =   5000      # game time in milliseconds
+GRAPH_PIXELS   = WIDTH - (X_AX_OF*2)   #Number of pixels on the X axis of the graph section
+PIX_PER_SECOND = SQUEEZE_TIME/GRAPH_PIXELS  # line update in milliseconds
 
 MOVEX = pygame.USEREVENT +1
-pygame.time.set_timer(MOVEX, 100)   
+pygame.time.set_timer(MOVEX, int(PIX_PER_SECOND))
+
+print(PIX_PER_SECOND)
+
+
+
+
  
 # -------- Main Program Loop -----------
 while not done:
@@ -96,6 +117,11 @@ while not done:
     # Move the object according to the speed vector.
     #x_coord = x_coord + x_speed
     y_coord = y_coord + y_speed
+    
+    
+    pygame.draw.line(screen, WHITE, [X_AX_OF, HEIGHT - Y_AX_OF], [ WIDTH - X_AX_OF, HEIGHT - Y_AX_OF], 1)
+    pygame.draw.line(screen, WHITE, [X_AX_OF, HEIGHT - Y_AX_OF], [ X_AX_OF, Y_AX_OF], 1)
+    pygame.draw.line(screen, WHITE, [WIDTH - X_AX_OF, HEIGHT - Y_AX_OF], [ WIDTH - X_AX_OF, Y_AX_OF], 1)
     
     pygame.draw.line(screen, WHITE, [oldx, oldy], [x_coord, y_coord], 1)
  
