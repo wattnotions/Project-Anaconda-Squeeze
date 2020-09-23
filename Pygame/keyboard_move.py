@@ -109,14 +109,19 @@ while not done:
                 y_speed = 0
                 
         elif event.type == MOVEX:
-            x_coord += 1
+            if x_coord < (WIDTH - X_AX_OF):
+                x_coord += 1
             
  
     # --- Game Logic
  
     # Move the object according to the speed vector.
     #x_coord = x_coord + x_speed
+    
+    
+    
     y_coord = y_coord + y_speed
+    
     
     
     pygame.draw.line(screen, WHITE, [X_AX_OF, HEIGHT - Y_AX_OF], [ WIDTH - X_AX_OF, HEIGHT - Y_AX_OF], 1)
